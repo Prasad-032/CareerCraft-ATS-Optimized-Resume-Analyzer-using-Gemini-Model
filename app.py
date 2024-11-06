@@ -20,7 +20,7 @@ st.image("images/career_icon.png", width=200)
 # Function to get response from the Gemini model
 def get_gemini_response(prompt):
     response = generativeai.generate_content(prompt)
-    return response['text']
+    return response.txt
 
 # Function to read and extract text from PDF
 def input_pdf_text(uploaded_pdf):
