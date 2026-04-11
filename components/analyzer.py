@@ -25,13 +25,18 @@ def render_analyzer():
             </div>""", unsafe_allow_html=True)
             st.session_state["jd_loaded"] = False
 
-        default_jd = st.session_state.get("selected_jd", "")
+        # Sync text_area key with selected_jd so it updates on rerun
+        if "selected_jd" in st.session_state and "jd_textarea" not in st.session_state:
+            st.session_state["jd_textarea"] = st.session_state["selected_jd"]
+        if st.session_state.get("selected_jd") and st.session_state.get("jd_textarea") != st.session_state.get("selected_jd"):
+            st.session_state["jd_textarea"] = st.session_state["selected_jd"]
+
         jd = st.text_area(
             "Paste the job description here",
-            value=default_jd,
             height=280,
             label_visibility="collapsed",
-            placeholder="Paste the job description here, or use Job Search above to auto-fill..."
+            placeholder="Paste the job description here, or use Job Search above to auto-fill...",
+            key="jd_textarea"
         )
 
     with col2:
@@ -66,7 +71,7 @@ def render_analyzer():
     if submit:
         if uploaded_file is None:
             st.error("⚠️ Please upload your resume (PDF or DOCX).")
-        elif jd.strip() == "":
+        elif not st.session_state.get("jd_textarea", "").strip():
             st.error("⚠️ Please provide a Job Description — paste one or use Job Search above.")
         else:
             with st.spinner("🤖 AI is analyzing your resume..."):
@@ -74,7 +79,7 @@ def render_analyzer():
                 if not text.strip():
                     st.error("⚠️ Could not extract text from your resume. Make sure it's not a scanned image PDF.")
                     return
-                response = analyze_resume(text, jd)
+                response = analyze_resume(text, st.session_state.get("jd_textarea", ""))
 
             st.markdown("<hr class='section-divider'>", unsafe_allow_html=True)
             st.markdown("<h2 style='text-align:center; color:#a78bfa !important;'>📊 ATS Analysis Result</h2>", unsafe_allow_html=True)
