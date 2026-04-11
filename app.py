@@ -48,11 +48,30 @@ st.markdown("""
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(124, 58, 237, 0.6);
     }
-    .stTextArea textarea, .stTextInput input {
-        background: rgba(255,255,255,0.05) !important;
-        border: 1px solid rgba(167, 139, 250, 0.3) !important;
+    /* Input & textarea — solid dark bg so text is always visible */
+    .stTextArea textarea,
+    .stTextInput input,
+    textarea,
+    input[type="text"],
+    input[type="search"] {
+        background: #1e1b3a !important;
+        background-color: #1e1b3a !important;
+        border: 1px solid rgba(167, 139, 250, 0.4) !important;
         border-radius: 12px !important;
-        color: #ffffff !important;
+        color: #e2e8f0 !important;
+        caret-color: #a78bfa !important;
+    }
+    .stTextArea textarea:focus,
+    .stTextInput input:focus {
+        border-color: #7c3aed !important;
+        box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.25) !important;
+        outline: none !important;
+    }
+    /* Placeholder text */
+    .stTextArea textarea::placeholder,
+    .stTextInput input::placeholder {
+        color: #64748b !important;
+        opacity: 1 !important;
     }
     [data-testid="stFileUploader"] {
         background: rgba(255,255,255,0.03);
