@@ -3,4 +3,6 @@ streamlit_extras
 openai
 python-dotenv
 PyPDF2
+python-docx
 Pillow
+requests

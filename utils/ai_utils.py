@@ -1,10 +1,6 @@
 import os
+import streamlit as st
 from openai import OpenAI
-
-client = OpenAI(
-    base_url="https://integrate.api.nvidia.com/v1",
-    api_key=os.getenv("NVIDIA_API_KEY")
-)
 
 INPUT_PROMPT = """
 As an experienced ATS (Applicant Tracking System), proficient in the technical domain encompassing
@@ -27,18 +23,31 @@ Mention the title for all the three sections.
 While generating the response put some space to separate all the three sections.
 """
 
-def analyze_resume(resume_text, jd):
-    prompt = INPUT_PROMPT.format(text=resume_text, jd=jd)
-    completion = client.chat.completions.create(
-        model="google/gemma-2-27b-it",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.2,
-        top_p=0.7,
-        max_tokens=1024,
-        stream=True
-    )
-    result = ""
-    for chunk in completion:
-        if chunk.choices and chunk.choices[0].delta.content is not None:
-            result += chunk.choices[0].delta.content
-    return result
+def analyze_resume(resume_text: str, jd: str) -> str:
+    api_key = os.getenv("NVIDIA_API_KEY")
+    if not api_key:
+        st.error("⚠️ NVIDIA_API_KEY is missing. Please set it in your .env file.")
+        return ""
+
+    try:
+        client = OpenAI(
+            base_url="https://integrate.api.nvidia.com/v1",
+            api_key=api_key
+        )
+        prompt = INPUT_PROMPT.format(text=resume_text, jd=jd)
+        completion = client.chat.completions.create(
+            model="google/gemma-2-27b-it",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.2,
+            top_p=0.7,
+            max_tokens=1024,
+            stream=True
+        )
+        result = ""
+        for chunk in completion:
+            if chunk.choices and chunk.choices[0].delta.content is not None:
+                result += chunk.choices[0].delta.content
+        return result
+    except Exception as e:
+        st.error(f"AI analysis failed: {e}")
+        return ""
