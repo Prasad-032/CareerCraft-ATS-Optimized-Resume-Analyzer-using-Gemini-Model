@@ -15,6 +15,8 @@ st.set_page_config(page_title="CareerCraft | ATS Resume Analyzer", layout="wide"
 # API key check
 if not os.getenv("NVIDIA_API_KEY"):
     st.error("⚠️ NVIDIA_API_KEY is not set. Please add it to your .env file to use the AI analysis feature.")
+if not os.getenv("RAPIDAPI_KEY"):
+    st.warning("⚠️ RAPIDAPI_KEY is not set. Job search will not work. Please add it to your .env file.")
 
 st.markdown("""
 <style>

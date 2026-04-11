@@ -51,9 +51,12 @@ def render_job_search():
             url      = job.get("url", "")
             desc     = job.get("description", "No description available.")
 
+            emp_type = job.get("employment_type", "")
             label = f"💼 {title}  —  {company}  ·  📍 {location}"
             if remote:
                 label += "  🌐 Remote"
+            if emp_type:
+                label += f"  · {emp_type}"
 
             with st.expander(label):
                 if tags:
